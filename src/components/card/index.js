@@ -7,7 +7,7 @@ const FriendCard = props =>
   <div className="card" onClick={props.imageClick}>
     <div className="img-container">
    
-     <img alt={props.image.replace(".", "")} src={require(`../../images/${this.props.image}`)} /> 
+     <img alt={props.image.replace(".", "")} src={require(`${props.image}`)} /> 
     </div>
   </div>
 );
