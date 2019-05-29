@@ -1,26 +1,86 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import Navbar from "./components/navBar/index";
+import Jumbotron from "./components/jumbotron/index";
+import FriendCard from "./components/card/index";
+import Footer from "./components/footer/index";
+import data from "./data.json";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+  state = {
+    data,
+    clickedData: [],
+    score: 0
+      };
+
+
+  imageClick = event => {
+    const currentData = event.target.alt;
+    const DataAlreadyClicked =
+      this.state.clickedData.indexOf(currentData) > -1;
+
+
+    if (DataAlreadyClicked) {
+      this.setState({
+        data: this.state.data.sort(function(a, b) {
+          return 0.5 - Math.random();
+        }),
+        clickedData: [],
+        score: 0
+      });
+        alert("You already selected this! You lose. Play again?");
+
+
+    } else {
+      this.setState(
+        {
+          data: this.state.data.sort(function(a, b) {
+            return 0.5 - Math.random();
+          }),
+          clickedData: this.state.clickedData.concat(
+            currentData
+          ),
+          score: this.state.score + 1
+        },
+       
+        () => {
+          if (this.state.score === 12) {
+            alert("Nice job! You Win!");
+            this.setState({
+              data: this.state.data.sort(function(a, b) {
+                return 0.5 - Math.random();
+              }),
+              clickedData: [],
+              score: 0
+            });
+          }
+        }
+      );
+    }
+  };
+
+//the order of components to be rendered: navbar, jumbotron, friendcard, footer 
+  render() {
+    return (
+      <div>
+        <Navbar 
+          score={this.state.score}
+        />
+        <Jumbotron />
+        <div className="wrapper">
+          {this.state.data.map(data => (
+            <FriendCard
+              imageClick={this.imageClick}
+              id={data.id}
+              key={data.id}
+              image={data.image}
+            />
+          ))}
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 }
-
 export default App;
